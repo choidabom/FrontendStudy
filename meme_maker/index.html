@@ -1,0 +1,75 @@
+<!-- canvas API: 자바스크립트로 그래픽을 그릴 수 있게 해주는 API
+The Canvas API largely focuses on 2D graphics. The WebGL API, which also uses the <canvas> element, draws hardware-accelerated 2D and 3D graphics. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meme Maker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 숫자 값으로 수정 가능하고, 이 값의 최소와 최대를 조절가능 & 단계 증가 감소 정할 수 있음 -->
+    <!-- range로 브러쉬 두께 조절 -->
+    
+    <div>
+        <!-- data-*에 원하는 데이터를 넣으면 자바스크립트에서 event.target.dataset 이라는 값을 통해서 사용가능 -->
+        <div 
+        class="color-option" 
+        style="background-color: #c0392b;" 
+        data-color="#c0392b"
+        ></div>
+        <div 
+            class="color-option" 
+            style="background-color: #e67e22;" 
+            data-color="#e67e22"
+        ></div>
+        <div 
+            class="color-option" 
+            style="background-color: #f1c40f;" 
+            data-color="#f1c40f"
+        ></div>
+        <div 
+            class="color-option" 
+            style="background-color: #2ecc71;" 
+            data-color="#2ecc71"
+        ></div>
+        <div 
+            class="color-option" 
+            style="background-color: #16a085;" 
+            data-color="#16a085"
+        ></div>
+        <div 
+            class="color-option" 
+            style="background-color: #3498db;" 
+            data-color="#3498db"
+        ></div>
+        <div 
+            class="color-option" 
+            style="background-color: #9b59b6;" 
+            data-color="#9b59b6"
+        ></div>
+        <div 
+            class="color-option" 
+            style="background-color: #2c3e50;" 
+            data-color="#2c3e50"
+        ></div>
+    </div>
+    <div class="btns">
+        <canvas></canvas>
+        <input id="line-width" type="range" min="1" max="10" value="5" step="0.1">
+        <input type="color" id="color"/>
+        <button id="mode-btn">Fill</button>
+        <button id="destroy-btn">Destroy</button>
+        <button id="eraser-btn">Erase</button>
+    
+        <!-- 포맷 관계없이 이미지만 원한다면 accept="image/*" -->
+        <input type="file" accept="image/*" id="file" />
+        <input type="text" id="text"/>
+        <button id="save">Save image</button>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
+ 
