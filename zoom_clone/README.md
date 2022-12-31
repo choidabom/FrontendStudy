@@ -42,3 +42,100 @@ Zoom Clone using NodeJS, WebRTC and Websockets.
 
 - Node.js 개발 시 자바스크립트 파일들을 수정할 때마다 매번 ctrl+c를 통해 node를 종료 후 다시 실행해줘야 하는 번거로움을 덜기 위해 **파일들을 모니터링하고 있다가 수정될 경우 자동으로 서버를 재실행시켜주는 스크립트 모니터링 유틸리티**이다.
 - 코드를 변경하면 자동으로 새로고침이 되길 원하기 때문에 nodemone을 설치해준다.
+
+### HTTP vs WebSockets
+
+**HTTP (http://, https://)**
+
+**stateless**
+
+- HTTP 서버는 유저에게 먼저 말을 걸 수 없다. client가 요청하면 response 과정 이후 유저가 누구인지 잊어버린다.
+- 백엔드와 유저 사이에 아무런 연결이 없다.
+- 그저 요청을 기다리고 응답하고 응답이 끝나면 다시 요청을 기다린다. (실시간 X)
+
+**WebSockets (ws://, wssL//)**
+
+**real-time**
+
+- **webSocket은 어떤 프로그래밍 언어에도 국한되어 있지 x. Protocol 그 자체**
+- 웹소켓(ws)에서는 한 번 연결이 성립되면, 두 방향(양방향)연결 생성됨. request-response 필요 x.
+- 브라우저와 서버 사이에 **bi-directional한 연결**이 있어서 서로에게 바로 갈 수 있는 길이 있다.
+- 백엔드와 유저 사이(브라우저), 백엔드와 백엔드 사이 등의 연결이 전화통화처럼 연결되어 있다.
+- 서버와 유저(브라우저)가 연결되어 있으면 양방향 통신으로 아무때나 메세지 등을 주고받을수 있다.
+
+### WebSockets in NodeJS
+
+`server.js`
+
+```js
+/* express는 http 프로토콜을 다루지만 우리는 https와 websocket 둘 다 다뤄본다. */
+/* http 서버를 만든다. */
+const server = http.createSever(app);
+/* 웹소켓 서버를 만들고 http 서버와 함께 둘 다 작동시킨다. 웹소켓 서버만 구동시키고 싶으면 {server} 인자를 안 넘겨주면 된다.*/
+const wss = new WebSocketServer({ server });
+```
+
+### WebSockets Events
+
+`server.js`
+
+```js
+function handleConnection(socket) {
+  console.log(socket);
+}
+wss.on("connection", handleConnection);
+```
+
+- on: JS의 addEventListener와 같은 역할을 한다. connection이라는 행동을 하면 해당 함수를 실행한다.
+- socket에 이벤트에 대한 정보를 담아준다.
+
+`app.js`
+
+```js
+const socket = new WebSocket(`ws://${window.location.host}`);
+```
+
+### WebSockets Messages
+
+`server.js`
+
+```js
+wss.on("connection", (socket) => {
+  console.log("Connection to Browser");
+  socket.on("close", () => console.log("Disconnectd from the Browser")); // 브라우저에서 연결이 끊기면 실행한다.
+  socket.on("message", (message) => {
+    console.log(message);
+  });
+  socket.send("hello"); // send로 데이터를 보낸다.
+});
+```
+
+- connection listener를 정의하면 브라우저와 연결되었을 때 실행한다.
+- close listener를 정의하면 브라우저와 연결이 끊겼을 때 실행한다.
+- message listener를 정의하면 브라우저에서 메시지가 왔을 때 실행한다.
+- socket.send를 이용해 브라우저로 데이터를 보낸다.
+
+`app.js`
+
+```js
+socket.addEventListener("open", () => {
+  console.log("Connected to Server");
+});
+
+socket.addEventListener("message", (message) => {
+  console.log("New message: ", message.data);
+});
+
+socket.addEventListener("close", () => {
+  console.log("Disconnected from Server");
+});
+
+setTimeout(() => {
+  socket.send("hello from the browser! ");
+}, 10000);
+```
+
+- open listener를 정의하면 서버와 연결되었을 때 실행한다.
+- close listener를 정의하면 서버와 연결이 끊겼을 때 실행한다.
+- message listener를 정의하면 서버에서 메시지가 왔을 때 실행한다.
+- socket.send를 이용해 서버로 데이터를 보낸다.

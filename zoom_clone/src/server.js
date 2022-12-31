@@ -1,3 +1,5 @@
+import http from "http";
+import WebSocket from "ws";
 import express from "express";
 const app = express();
 // 우리의 express app을 만들어줌
@@ -20,4 +22,25 @@ app.get("/", (req, res) => res.render("home"));
 app.get("/*", (res, req) => res.render("home"));
 const handleListen = () => console.log("Listening on http://localhost:3000");
 
-app.listen(3000, handleListen);
+/* createServer를 하려면 requestListener경로가 있어야함. => app */
+const server =
+  http.createServer(app); /* 같은 서버에서 http, webSocket 둘 다 작동시킴 */
+const wss = new WebSocket.Server({ server });
+
+function onSocketClose() {
+  console.log("Disconnected from the Browser! ");
+}
+
+function onSocketMessage(message) {
+  console.log(message.toString("utf-8"));
+}
+wss.on("connection", (socket) => {
+  /* send: 서버의 메서드가 아니라 socket의 메서드 ! */
+  /* connection이 생기면 socket을 받을 수 있다는 것을 알 수 있음 */
+  console.log("Connected to Browser");
+  socket.on("close", onSocketClose);
+  socket.on("message", onSocketMessage);
+  socket.send("hello !!!");
+});
+
+server.listen(3000, handleListen);
