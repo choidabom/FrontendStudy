@@ -6,12 +6,13 @@
   </body>
   <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
-  <script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
     const root = document.getElementById("root");
     // React JS로 element를 생성함 !
     // createElement에 들어갈 인자는 HTML태그와 똑같은 이름이어야 함.
     // 어떻게 body 안에 React element를 가져다 둘 수 있을까? => react-dom 활용해야함.
-    const h3 = React.createElement(
+    /* const h3 = React.createElement(
       "h3",
       {
         onMouseEnter: () => console.log("mouse enter"),
@@ -24,8 +25,29 @@
         onClick: () => console.log("I'm clicked..!"),
       },
       "Click me"
+    );*/
+
+    const Title = () => (
+      <h3 id="title" onMouseEnter={() => console.log("mouse enter")}>
+        Hello I'm a title
+      </h3>
     );
-    const container = React.createElement("div", null, [h3, btn]);
-    ReactDOM.render(container, root);
+    const Button = () => (
+      <button
+        sytle={{ backgroundColor: "tomato" }}
+        onClick={() => console.log("I'm clicked..!")}
+      >
+        Click me
+      </button>
+    );
+    const Contatiner = () => (
+      // 컴포넌트의 첫 글자는 반드시 대문자여야 한다.
+      // 소문자로 적게 되면 React와 JSX는 HTML 태그라고 생각할 것.
+      <div>
+        <Title />
+        <Button />
+      </div>
+    );
+    ReactDOM.render(Contatiner, root);
   </script>
 </html>
