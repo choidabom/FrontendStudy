@@ -139,3 +139,57 @@ setTimeout(() => {
 - close listener를 정의하면 서버와 연결이 끊겼을 때 실행한다.
 - message listener를 정의하면 서버에서 메시지가 왔을 때 실행한다.
 - socket.send를 이용해 서버로 데이터를 보낸다.
+
+### Chat Completed
+
+`home.pug`
+
+```pug
+main
+    ul
+    form
+        input(type="text", placeholder="write a msg", required)
+        button Send
+```
+
+`server.js`
+
+```js
+const sockets = [];
+
+wss.on("connection", (socket) => {
+  sockets.push(socket);
+  /* send: 서버의 메서드가 아니라 socket의 메서드 ! */
+  /* connection이 생기면 socket을 받을 수 있다는 것을 알 수 있음 */
+  console.log("Connected to Browser");
+  socket.on("close", onSocketClose);
+  /* user가 보낸 메시지를 다시 user에게 보내줄 것. */
+  socket.on("message", (message) => {
+    console.log(message.toString("utf8"));
+    sockets.forEach((aSocket) => aSocket.send(message.toString("utf8")));
+  });
+});
+```
+
+- 브라우저에서 받은 메시지를 다시 돌려보낸다.
+- 연결된 모든 소켓에 접근하기 위해 forEach를 사용한다. 크롬에게 받으면 크롬에게만 보내고 파이어 폭스에게 받으면 파이어폭스에게만 돌려보내는 현상을 방지하기 위함이다.
+
+`app.js`
+
+```js
+const messageList = document.querySelector("ul");
+const messageForm = document.querySelector("form");
+
+...
+
+function handleSubmit(event) {
+    event.preventDefault();
+    const input = messageForm.querySelector("input");
+    socket.send(input.value);
+    input.value = "";
+}
+
+messageForm.addEventListener("submit", handleSubmit);
+```
+
+- form의 제출버튼을 누르면 handleSubmit 함수를 실행한다. input의 value를 server로 보낸다.
