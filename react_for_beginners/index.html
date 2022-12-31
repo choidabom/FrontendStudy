@@ -1,0 +1,31 @@
+<!-- React Js는 어플리케이션이 아주 interactive하도록 만들어주는 library -->
+<!DOCTYPE html>
+<html lang="en">
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+  <script>
+    const root = document.getElementById("root");
+    // React JS로 element를 생성함 !
+    // createElement에 들어갈 인자는 HTML태그와 똑같은 이름이어야 함.
+    // 어떻게 body 안에 React element를 가져다 둘 수 있을까? => react-dom 활용해야함.
+    const h3 = React.createElement(
+      "h3",
+      {
+        onMouseEnter: () => console.log("mouse enter"),
+      },
+      "Hello I'm span"
+    );
+    const btn = React.createElement(
+      "button",
+      {
+        onClick: () => console.log("I'm clicked..!"),
+      },
+      "Click me"
+    );
+    const container = React.createElement("div", null, [h3, btn]);
+    ReactDOM.render(container, root);
+  </script>
+</html>
