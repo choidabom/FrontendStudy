@@ -75,6 +75,9 @@ const server = http.createSever(app);
 const wss = new WebSocketServer({ server });
 ```
 
+- **같은 퐅트에서 http, ws 통신 같이 하기**
+- server에 접근할 수 있도록 createServer를 해준다.
+
 ### WebSockets Events
 
 `server.js`
@@ -193,3 +196,45 @@ messageForm.addEventListener("submit", handleSubmit);
 ```
 
 - form의 제출버튼을 누르면 handleSubmit 함수를 실행한다. input의 value를 server로 보낸다.
+
+### Nicknames part One-Two
+
+**왜 object을 string으로 바꿔줘야하는가?**
+
+- 이렇게 해야하는 이유: websocket이 브라우저에 있는 API이기 때문이다.
+- 백엔드에서는 다양한 프로그래밍 언어를 사용할 수 있기 때문에 API는 어떠한 판단도 하면 안 된다.
+
+`JSON.stringify`: JavaScript object => string
+`JSON.parse()`: string => JavaScript object
+
+`home.pug`
+
+```js
+main
+    form#nick
+        input(type="text", placeholder="choose a nickname", required)
+        button Save
+    ul
+    form#message
+        input(type="text", placeholder="write a msg", required)
+        button Send
+```
+
+- 닉네임을 저장할 form과 메시지를 보낼 form을 만든다.
+
+`app.js`
+
+- nickForm, messageForm을 변수로 지정하고 소켓에 접속한다.
+- 닉네임이나 메시지를 보내면 서버에 보낼 jsond으로 변환하는 함수를 만든다.
+- 서버에서 받은 메시지를 li tag에 담아 브라우저에서 출력해준다.
+- 각 폼들의 저장 버튼을 누르면 각 폼의 input 값을 server에 보내준다.
+
+`server.js`
+
+- 메시지를 받으면 먼저 **json 형태로 파싱**해준다.
+- **소켓에 정보를 저장할 수 있다.**
+
+### socket IO
+
+- socket IO은 프레임워크로 실시간, 양방향, event 기반의 통신 제공
+- websocket은 socket IO가 실시간, 양방향, event 기반 통신을 제공하는 방법 중 하나 !
