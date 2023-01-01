@@ -325,3 +325,64 @@ function handelMessageSubmit(event) {
 
 - **private room**: 서버와 브라우저간의 연결 / personal ID로 구성되어있음
 - **public room**: 내가 생성한 이름이 앞에 들어가있게 된다. / Set 안에는 personal ID가 들어가게 됨
+
+---
+
+## 3.0 User Video
+
+### 사용자로부터 영상받아 띄우기
+
+- playsinline: 모바일 브라우저가 필요로 하는 property / 비디오가 전체화면이 되지 않게 함.
+- stream: 비디오와 오디오가 결합된 것.
+
+### 영상/음성 조작 버튼 만들기
+
+- 버튼 생성
+
+  - `home.pug`
+  - myStreamd이라는 id를 가진 div에 video 부분과 button을 넣어준다.
+  - `app.js`
+  - 버튼을 클릭했을 때 상태변화를 감지하기 위한 이벤트를 만들어주고, 상태를 담고 있는 변수도 만들어준다.
+
+- 버튼 기능 구현
+  - stream은 track를 제공하며 우리는 해당 track에 접근가능하다.
+  - myStream의 getAudioTracks 함수를 통해 오디오 부분 가져올 수 있다.
+  - 우리가 다뤄야할 부분은 enabled를 false로 만들고, 다시 true로 만드는 부분이다 !
+  - `myStream.getAudioTracks().forEach(trach => track.enabled = !track.enabled);`
+  - `myStream.getVideoTracks().forEach(trach => track.enabled = !track.enabled);`
+
+### 사용자 장치 받아오기
+
+- getCameras 함수를 만들어서 유저의 카메라 목록을 불러오려고 한다.
+- `enumerateDevices()`: 모든 장치와 미디어 장치(ex. 컴퓨터에 연결되거나 모바일이 가지고 있는 장치)를 알려준다.
+- getCamers 역시 비동기로 동작하기 때문에 try catch문을 사용한다.
+- navigator.mediaDevices.enumerateDevices()를 통해 장치 리스트를 가져올 수 있다.
+- getCameras를 실행시키기 위해 getMedia 함수 내에서 getCameras를 실행해준다. => await로 실행해서 비동기로 동작하게 해야한다는 점 !
+
+  - `home.pug`
+    - select div 하나 만들어주고, option 넣어준다.
+  - `app.js`
+    - value에는 카메라의 고유 값을 지정해주고, 사용자에게 보이는 선택화면에는 label을 달아서 보기 편하게 만든다.
+    - label이 보기 좋지만 카메라의 고유한 정보를 담진 않기 때문에 **반드시 카메라의 deviceID가 value로 들어가야 한다.**
+
+  ```js
+  async function getCameras() {
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices(); // 장치 리스트 가져오기
+      const cameras = devices.filter((device) => devices.kind === "videoinput"); // 비디오인풋만 가져오기
+      cameras.forEach((camera) => {
+        const option = document.createElement("option"); // 새로운 옵션 생성
+        option.value = camera.deviceId; // 카메라의 고유 값을 value에 넣기
+        option.innerText = camera.label; // 사용자가 선택할 때는 label을 보고 선택할 수 있게 만들기
+        camerasSelect.appendChild(option); // 카메라의 정보들을 option 항목에 넣어주기
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  ```
+
+### 영상 장치 변경하기
+
+- 유저가 select를 변경할 때 이를 감지하면 된다 !@
+- 방법 => 강제적으로 stream을 다시 실행해준다.
