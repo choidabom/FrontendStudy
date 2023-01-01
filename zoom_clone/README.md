@@ -243,3 +243,28 @@ main
 - websocket 기능이 지원되지 않는 상황에서 socket io는 다른 수단을 찾아서 실시간 통신 기술을 지원한다는 점에서 탄력적이다.
 
 - websocket API는 브라우저에 설치되어있어서 따로 설치 필요없었지만 socket.IO는 frontend와 backend에 socket.IO를 설치해줘야한다.
+
+### socket.emit
+
+- socket.emit 함수를 사용함으로써 “message” 이벤트에만 국한되지 않고, 전달하는 데이터의 자료형이 string일 필요도 없어져 자유로워진다.
+- 해당 메소드의 마지막 파라미터는 서버가 마지막으로 호출하는 함수
+- 호출은 서버단에서 하지만, 실행은 클라이언트단에서 한다.
+- `app.js`의 socket.emit과 `server.js`의 socket.on에는 같은 이름 사용해야함.
+- 끝날 때 실행되는 function을 보내고 싶으면 마지막에 넣어야 함.
+
+`socket.emit("eventName", argument1, argument2, argument3, .... , function)`
+
+1. eventName
+
+- emit의 첫 번째 인자는 이벤트 이름 !
+
+2. argument
+
+- 여러개 보낼 수 있다.
+- 다양한 type으로 보낼 수 있다.
+
+3. function
+
+- backend에서 응답을 받아 실행되는 함수
+- argument의 가장 마지막에 써야한다.
+  -backend에서 argument를 전달 받을 수 있다.
