@@ -386,3 +386,22 @@ function handelMessageSubmit(event) {
 
 - 유저가 select를 변경할 때 이를 감지하면 된다 !@
 - 방법 => 강제적으로 stream을 다시 실행해준다.
+
+## webRTC를 사용해서 peer-to-peer 환경 구축
+
+- webRTC란? web Real Time Communication
+- 영상, 오디오, 메세지는 서버를 통해서가 아니라, 직접 전달된다.
+- **핵심 => signaling이 끝나면 peer-to-peer 연결이 된다.**
+
+1. 크롬 브라우저가 서버에게 자신의 IP와 port 번호를 준다. => 브라우저는 서버에게 configuration + 본인의 위치만 전달한다.
+2. 파이어폭스가 서버에게 자신의 IP와 port 번호를 준다. => 브라우저는 서버에게 configuration + 본인의 위치만 전달한다.
+   (cf. 브라우저는 서버에게 인터넷에서의 그들의 위치와 settings, configuration, 방화벽이나 라우터 유무 여부 등의 정보를 서버에게 전달)
+3. 서버가 크롬 브라우저에게 파이어폭스 브라우저가 어디에 있는지 알려준다.
+4. 서버가 파이어폭스 브라우저에게 크롬 브라우저가 어디에 있는지 알려준다.
+5. peer-to-peer 연결 시작
+
+- 서버가 영상, 텍스트를 전송하는 것이 아니라
+- **서버는 다른 브라우저가 어디에 있는지만을 알려준다.**
+
+signalling을 위해 & 위치 정보를 보내기 위해 webSocket 사용
+브라우저 간의 연결(peer-to-peer)이 되면 앞전에 만든 stream 전송
