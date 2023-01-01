@@ -234,7 +234,12 @@ main
 - 메시지를 받으면 먼저 **json 형태로 파싱**해준다.
 - **소켓에 정보를 저장할 수 있다.**
 
-### socket IO
+### Socket.IO vs WebSockets
 
-- socket IO은 프레임워크로 실시간, 양방향, event 기반의 통신 제공
-- websocket은 socket IO가 실시간, 양방향, event 기반 통신을 제공하는 방법 중 하나 !
+- socket.IO은 프론트와 백엔드 간 실시간, 양방향, event 기반의 통신을 가능하게 해주는 프레임워크
+- **socket.IO is Not a websocket implementation.**
+  - websocket은 socket IO가 실시간, 양방향, event 기반 통신을 제공하는 방법 중 하나 !
+  - websocket을 지원하지 않는 경우, HTTP long polling와 같은 것 사용
+- websocket 기능이 지원되지 않는 상황에서 socket io는 다른 수단을 찾아서 실시간 통신 기술을 지원한다는 점에서 탄력적이다.
+
+- websocket API는 브라우저에 설치되어있어서 따로 설치 필요없었지만 socket.IO는 frontend와 backend에 socket.IO를 설치해줘야한다.
