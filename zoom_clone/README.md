@@ -43,7 +43,9 @@ Zoom Clone using NodeJS, WebRTC and Websockets.
 - Node.js 개발 시 자바스크립트 파일들을 수정할 때마다 매번 ctrl+c를 통해 node를 종료 후 다시 실행해줘야 하는 번거로움을 덜기 위해 **파일들을 모니터링하고 있다가 수정될 경우 자동으로 서버를 재실행시켜주는 스크립트 모니터링 유틸리티**이다.
 - 코드를 변경하면 자동으로 새로고침이 되길 원하기 때문에 nodemone을 설치해준다.
 
-### HTTP vs WebSockets
+---
+
+## HTTP vs WebSockets
 
 **HTTP (http://, https://)**
 
@@ -63,7 +65,7 @@ Zoom Clone using NodeJS, WebRTC and Websockets.
 - 백엔드와 유저 사이(브라우저), 백엔드와 백엔드 사이 등의 연결이 전화통화처럼 연결되어 있다.
 - 서버와 유저(브라우저)가 연결되어 있으면 양방향 통신으로 아무때나 메세지 등을 주고받을수 있다.
 
-### WebSockets in NodeJS
+## WebSockets in NodeJS
 
 `server.js`
 
@@ -78,7 +80,7 @@ const wss = new WebSocketServer({ server });
 - **같은 퐅트에서 http, ws 통신 같이 하기**
 - server에 접근할 수 있도록 createServer를 해준다.
 
-### WebSockets Events
+## WebSockets Events
 
 `server.js`
 
@@ -143,7 +145,7 @@ setTimeout(() => {
 - message listener를 정의하면 서버에서 메시지가 왔을 때 실행한다.
 - socket.send를 이용해 서버로 데이터를 보낸다.
 
-### Chat Completed
+## Chat Completed
 
 `home.pug`
 
@@ -197,7 +199,7 @@ messageForm.addEventListener("submit", handleSubmit);
 
 - form의 제출버튼을 누르면 handleSubmit 함수를 실행한다. input의 value를 server로 보낸다.
 
-### Nicknames part One-Two
+## Nicknames part One-Two
 
 **왜 object을 string으로 바꿔줘야하는가?**
 
@@ -234,7 +236,7 @@ main
 - 메시지를 받으면 먼저 **json 형태로 파싱**해준다.
 - **소켓에 정보를 저장할 수 있다.**
 
-### Socket.IO vs WebSockets
+## Socket.IO vs WebSockets
 
 - socket.IO은 프론트와 백엔드 간 실시간, 양방향, event 기반의 통신을 가능하게 해주는 프레임워크
 - **socket.IO is Not a websocket implementation.**
@@ -244,7 +246,7 @@ main
 
 - websocket API는 브라우저에 설치되어있어서 따로 설치 필요없었지만 socket.IO는 frontend와 backend에 socket.IO를 설치해줘야한다.
 
-### socket.emit
+## socket.emit
 
 - socket.emit 함수를 사용함으로써 “message” 이벤트에만 국한되지 않고, 전달하는 데이터의 자료형이 string일 필요도 없어져 자유로워진다.
 - 해당 메소드의 마지막 파라미터는 서버가 마지막으로 호출하는 함수
@@ -268,3 +270,58 @@ main
 - backend에서 응답을 받아 실행되는 함수
 - argument의 가장 마지막에 써야한다.
   -backend에서 argument를 전달 받을 수 있다.
+
+**=> 핵심: 함수호출을 백엔드에서 했는데 코드는 프론트엔드에서 실행된다 !**
+
+## Rooms & Room Notifications
+
+- join: 방에 들어가는 기능을 하는 메서드
+- onAny: 소켓 내에서 발생한 이벤트를 캐치하는 역할을 하는 메서드
+- on: 특정 위치에 이벤트를 전달하기 위해 사용하는 메서드
+- rooms: 현재 소켓이 들어가있는 방을 표시하는 메서드
+- id: 현재 소켓의 id를 나타내는 메서드
+
+- disconnect: 연결이 완전히 끊어졌을 때 발생하는 이벤트 (room 정보가 비어있음)
+- disconnecting: 브라우저는 이미 닫았지만 아직 연결이 끊어지지 않은 그 찰나에 발생하는 이벤트 (그래서 room 정보가 살아있음) / socket이 방을 떠나기 바로 직전에 발생
+
+- Set(2) { "asdfasdfasdf" , "room" }에서 Set은 자바스크립트 자료구조 중 하나이다.
+- 중복되는 data를 포함할 수 없고, Index가 적용이 안되고, forEach 사용이 가능합니다.
+
+## Nicknames
+
+### 닉네임을 설정하고 메시지를 보냈을 때 누가 보냈는지 확인할 수 있도록
+
+`app.js`
+
+```js
+function handelMessageSubmit(event) {
+  event.preventDefault();
+  const input = room.querySelector("#msg input");
+  const value = input.value;
+  socket.emit("new_message", input.value, roomName, () => {
+    addMessage(`You: ${value}`);
+  }); // 백엔드로 new_message 이벤트를 날림
+  input.value = "";
+}
+```
+
+- handleMessageSubmit에서 value를 굳이 따로 만든 이유는 value를 만들지 않았다면 생기는 문제점에 대해 알아보면 쉽게 이해 가능하다.
+- 만약 input.value를 따로 저장해두지 않으면, socket.emit 함수가 동작하고 메시지를 보내기 전에 input.value를 초기화 하는 작업이 **비동기로 먼저 작동**하여서 addMessage가 돌아갈 때는 이미 우리가 보내고 싶었던 input.value가 초기화 되어버린다.
+
+## Room Count
+
+### 방 이름과 유저 수를 띄워보자 !
+
+- 문제점 발생: 특정 소켓은 A 서버에서, 다른 소켓은 B 서버에서 돌리는 경우가 생길 수 있는데, 이렇게 되면 A 서버에 연결된 클라이언트는 B 서버에 연결된 클라이언트와 소통할 수 없다.
+- 문제점 대처: **adapter** => 두 서버를 연결해서 데이터를 전송하는 기능
+- **Adapter**: 다른 서버들 사이에 실시간 어플리케이션을 동기화하는 것.
+- adapter는 누가 연결되었는지, 현재 어플리케이션에 room이 얼마나 있는지 알려준다.
+
+- 현재 이 adapter는 메모리에 존재한다. 하지만 실제 서버에서는 MongoDB와 같은 곳에 연결되게 된다.
+- 지금은 단순한 하나의 서버기 때문에 메모리에 adapter를 연결시켜서 사용한다.
+- adapter가 어떻게 사용되고 있는지 확인하기 위해 server.js에서 console.log를 이용해서 adapter를 출력해본다.
+
+### rooms
+
+- **private room**: 서버와 브라우저간의 연결 / personal ID로 구성되어있음
+- **public room**: 내가 생성한 이름이 앞에 들어가있게 된다. / Set 안에는 personal ID가 들어가게 됨

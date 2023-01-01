@@ -4,10 +4,48 @@ const socket = io();
 
 const welcome = document.getElementById("welcome");
 const form = welcome.querySelector("form");
+const room = document.getElementById("room");
 
-function backendDone(msg) {
-  console.log(`The backend says: `, msg);
+room.hidden = true; // 처음에는 방안에서 할 수 있는 것들 안 보이게 !
+
+let roomName;
+
+function addMessage(message) {
+  const ul = room.querySelector("ul");
+  const li = document.createElement("li");
+  li.innerText = message;
+  ul.appendChild(li);
 }
+
+function handelMessageSubmit(event) {
+  event.preventDefault();
+  const input = room.querySelector("#msg input");
+  const value = input.value;
+  socket.emit("new_message", input.value, roomName, () => {
+    addMessage(`You: ${value}`);
+  }); // 백엔드로 new_message 이벤트를 날림, (input.value이랑 방이름도 같이 보냄), 마지막 요소는 백엔드에서 시작시킬 수 있는 함수
+  input.value = "";
+}
+
+function handelNicknameSubmit(event) {
+  event.preventDefault();
+  const input = room.querySelector("#name input");
+  const value = input.value;
+  socket.emit("nickname", input.value);
+}
+
+function showRoom() {
+  // 방에 들어가면 방 내용이 보이게
+  welcome.hidden = true;
+  room.hidden = false;
+  const h3 = room.querySelector("h3");
+  h3.innerText = `Room ${roomName}`;
+  const msgForm = room.querySelector("#msg");
+  const nameForm = room.querySelector("#name");
+  msgForm.addEventListener("submit", handelMessageSubmit);
+  nameForm.addEventListener("submit", handelNicknameSubmit);
+}
+
 function handleRoomSubmit(event) {
   event.preventDefault();
   const input = form.querySelector("input");
@@ -20,7 +58,36 @@ function handleRoomSubmit(event) {
   // 2. 페이로드
   // 3. 서버에서 호출하는 function - 서버단에서 호출되지만 실행은 클라이언트단에서
   // 마지막 function은 back-end에 보냄.
-  socket.emit("enter_room", input.value, backendDone);
+  socket.emit("enter_room", input.value, showRoom);
+  roomName = input.value;
   input.value = "";
 }
+
+// 서버는 back-end에서 function을 호출하지만 function은 front-end에서 실행됨!
+
 form.addEventListener("submit", handleRoomSubmit);
+
+socket.on("welcome", (user) => {
+  addMessage(`${user} joined!`);
+});
+
+socket.on("bye", (left) => {
+  addMessage(`${left} left`);
+});
+
+socket.on("new_massage", addMessage); // addMessage만 써도 알아서 msg를 매개변수로 넣는다.
+
+socket.on("room_change", (rooms) => {
+  const roomList = welcome.querySelector("ul");
+  if (rooms.length === 0) {
+    roomList.innerHTML = "";
+    return;
+  }
+  rooms.forEach((room) => {
+    const li = document.createElement("li");
+    li.innerText = room;
+    roomList.append(li);
+  });
+});
+
+// socket.on("room_change", (msg) => console.log(msg));
