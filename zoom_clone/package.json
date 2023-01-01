@@ -14,6 +14,7 @@
     "nodemon": "^2.0.20"
   },
   "dependencies": {
+    "@socket.io/admin-ui": "^0.5.1",
     "compression": "^1.7.4",
     "express": "^4.18.2",
     "method-override": "^3.0.0",

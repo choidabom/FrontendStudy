@@ -8,7 +8,7 @@ const room = document.getElementById("room");
 
 room.hidden = true; // 처음에는 방안에서 할 수 있는 것들 안 보이게 !
 
-let roomName;
+let roomName = "";
 
 function addMessage(message) {
   const ul = room.querySelector("ul");
@@ -27,13 +27,6 @@ function handelMessageSubmit(event) {
   input.value = "";
 }
 
-function handelNicknameSubmit(event) {
-  event.preventDefault();
-  const input = room.querySelector("#name input");
-  const value = input.value;
-  socket.emit("nickname", input.value);
-}
-
 function showRoom() {
   // 방에 들어가면 방 내용이 보이게
   welcome.hidden = true;
@@ -41,9 +34,7 @@ function showRoom() {
   const h3 = room.querySelector("h3");
   h3.innerText = `Room ${roomName}`;
   const msgForm = room.querySelector("#msg");
-  const nameForm = room.querySelector("#name");
   msgForm.addEventListener("submit", handelMessageSubmit);
-  nameForm.addEventListener("submit", handelNicknameSubmit);
 }
 
 function handleRoomSubmit(event) {
@@ -67,11 +58,15 @@ function handleRoomSubmit(event) {
 
 form.addEventListener("submit", handleRoomSubmit);
 
-socket.on("welcome", (user) => {
+socket.on("welcome", (user, newCount) => {
+  const h3 = room.querySelector("h3");
+  h3.innerText = `Room ${roomName} (${newCount})`;
   addMessage(`${user} joined!`);
 });
 
-socket.on("bye", (left) => {
+socket.on("bye", (left, newCount) => {
+  const h3 = room.querySelector("h3");
+  h3.innerText = `Room ${roomName} (${newCount})`;
   addMessage(`${left} left`);
 });
 
