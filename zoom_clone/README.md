@@ -389,9 +389,13 @@ function handelMessageSubmit(event) {
 
 ## webRTC를 사용해서 peer-to-peer 환경 구축
 
-- webRTC란? web Real Time Communication
+webRTC란? web Real Time Communication
+
 - 영상, 오디오, 메세지는 서버를 통해서가 아니라, 직접 전달된다.
-- **핵심 => signaling이 끝나면 peer-to-peer 연결이 된다.**
+- **핵심 -> signaling이 끝나면 peer-to-peer 연결이 된다.**
+- webRTC를 사용하는 가장 큰 이유는 webSocket이나 Socket.io에서 실현하지 못한 peer-to-peer 통신을 실현할 수 있기 때문이다.
+
+### [과정 - webRTC를 사용해서 peer-to-peer 환경 구축]
 
 1. 크롬 브라우저가 서버에게 자신의 IP와 port 번호를 준다. => 브라우저는 서버에게 configuration + 본인의 위치만 전달한다.
 2. 파이어폭스가 서버에게 자신의 IP와 port 번호를 준다. => 브라우저는 서버에게 configuration + 본인의 위치만 전달한다.
@@ -399,9 +403,13 @@ function handelMessageSubmit(event) {
 3. 서버가 크롬 브라우저에게 파이어폭스 브라우저가 어디에 있는지 알려준다.
 4. 서버가 파이어폭스 브라우저에게 크롬 브라우저가 어디에 있는지 알려준다.
 5. peer-to-peer 연결 시작
+   a. 서버가 영상, 텍스트를 전송하는 것이 아니라
+   b. **서버는 다른 브라우저가 어디에 있는지만을 알려준다.**
+   c. 브라우저 간의 연결(peer-to-peer)이 되면 앞전에 만든 stream 전송
 
-- 서버가 영상, 텍스트를 전송하는 것이 아니라
-- **서버는 다른 브라우저가 어디에 있는지만을 알려준다.**
+## Rooms - 방만들기
 
-signalling을 위해 & 위치 정보를 보내기 위해 webSocket 사용
-브라우저 간의 연결(peer-to-peer)이 되면 앞전에 만든 stream 전송
+1. 채팅에서 만들었던 방처럼, video call을 처리하기 위한 room이 다시 필요하다.
+2. welcome과 call을 나누어 room에 들어가게 되면 call이 보이도록 한다.
+
+## 양쪽 브라우저에 webRTC 연결 만들기
