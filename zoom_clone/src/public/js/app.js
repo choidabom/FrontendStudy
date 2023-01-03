@@ -15,6 +15,7 @@ let myStream;
 let muted = false;
 let cameraOff = false;
 let roomName;
+let myPeerConnection;
 
 async function getCameras() {
   try {
@@ -36,6 +37,7 @@ async function getCameras() {
 }
 /* getMedia 함수를 만들어서 유저의 유저미디어 string을 받아온다.
  * async를 이용해서 비동기로 받기 때문에, try catch문을 사용
+ * getMedia => 영상이랑 카메라 받아옴
  */
 async function getMedia(deviceId) {
   const initialConstraints = {
@@ -97,23 +99,52 @@ camerasSelect.addEventListener("input", handleCameraChange); // 카메라 변경
 const welcome = document.getElementById("welcome");
 const welcomeForm = welcome.querySelector("form");
 
-function startMedia() {
+/* 양쪽 브라우저에서 연결통로를 먼저 만듬  */
+async function initCall() {
   welcome.hidden = true;
   call.hidden = false;
-  getMedia(); // 카메라, 마이크, 다른 카메라들도 다 불러옴
+  await getMedia(); // 카메라, 마이크, 다른 카메라들도 다 불러옴
+  makeConnection();
 }
 
-function handleWelcomeSubmit(event) {
+async function handleWelcomeSubmit(event) {
   event.preventDefault();
   const input = welcomeForm.querySelector("input");
-  socket.emit("join_room", input.value, startMedia); // 서버로 input.value를 보내는 과정 ! startMedia 함수도 같이 보내준다.
+  await initCall();
+  socket.emit("join_room", input.value);
   roomName = input.value; // 방에 참가했을 때 나중에 쓸 수 있도록 방 이름을 변수에 저장
   input.value = "";
 }
 welcomeForm.addEventListener("submit", handleWelcomeSubmit);
 
 // Socket Code
-socket.on("welcome", () => {
-  // 어떤 사람이 우리 방에 참가하는 사건 !@
-  console.log("someone joined !!");
+
+// Peer a에서 돌아가는 코드
+socket.on("welcome", async () => {
+  // 브라우저 a의 방에 브라우저 b가 들어오면 console에서 확인 가능
+  const offer = await myPeerConnection.createOffer();
+  myPeerConnection.setLocalDescription(offer); //브라우저 a에서만 실행된다
+  console.log("send the offer");
+  socket.emit("offer", offer, roomName);
 });
+
+// Peer b에서 돌아가는 코드
+socket.on("offer", async (offer) => {
+  myPeerConnection.setRemoteDescription(offer);
+  const answer = await myPeerConnection.createAnswer();
+  myPeerConnection.setLocalDescription(answer);
+  socket.emit("answer", answer, roomName);
+});
+
+socket.on("ansewr", (answer) => {
+  myPeerConnection.setRemoteDescription(answer);
+});
+// RTC Code
+
+// 영상과 오디오 데이터를 주고 받고 할 때, 그 영상의 오디오와 영상 데이터를 peer connection에 집어넣어야한다.
+function makeConnection() {
+  myPeerConnection = new RTCPeerConnection();
+  myStream
+    .getTracks()
+    .forEach((track) => myPeerConnection.addTrack(track, myStream));
+}

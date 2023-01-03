@@ -45,6 +45,8 @@ Zoom Clone using NodeJS, WebRTC and Websockets.
 
 ---
 
+# 1. Chat with WebSockets
+
 ## HTTP vs WebSockets
 
 **HTTP (http://, https://)**
@@ -236,6 +238,10 @@ main
 - 메시지를 받으면 먼저 **json 형태로 파싱**해준다.
 - **소켓에 정보를 저장할 수 있다.**
 
+--
+
+# 2. Socket.IO
+
 ## Socket.IO vs WebSockets
 
 - socket.IO은 프론트와 백엔드 간 실시간, 양방향, event 기반의 통신을 가능하게 해주는 프레임워크
@@ -328,7 +334,9 @@ function handelMessageSubmit(event) {
 
 ---
 
-## 3.0 User Video
+# 3. Video call
+
+## User Video
 
 ### 사용자로부터 영상받아 띄우기
 
@@ -413,3 +421,30 @@ webRTC란? web Real Time Communication
 2. welcome과 call을 나누어 room에 들어가게 되면 call이 보이도록 한다.
 
 ## 양쪽 브라우저에 webRTC 연결 만들기
+
+- 우리 카메라에서 오는 이 stream을 가져다가 이 stream의 데이터를 가져다가 연결을 만들 것!
+
+1. peerConnection을 brave 브라우저와 chrome 브라우저에 만들어야한다.
+   `const myPeerConnection = new RTCPeerConnection();`
+2. 양쪽 브라우저에서 카메라와 마이크의 데이터 stream을 받아서 그것들을 연결 안에 집어 넣는다.
+
+   - peer-to-peer 연결 안에다가 영상과 오디오를 집어넣어야한다.
+   - 영상과 오디오 데이터를 주고 받고 할 때, 그 영상의 오디오와 영상 데이터를 peer connection에 집어넣어야한다.
+
+   ```js
+   myStream.getTracks().forEach((track) => {
+     myPeerConnection.addTrack(track, myStream);
+   });
+   ```
+
+3. myPeerConnection이 존재하지 않는 에러
+   a. Peer B가 offer 이벤트를 감지한 순간에 아직 myPeerConnection이 존재하지 않을 수 있다.
+   b. startMedia 함수는 join_room 이벤트의 마지막에 실행되는데
+   c. socketIO가 너무 빨라서 myPeerConnection이 만들어지기도 전에 offer 이벤트가 감지되는 경우가 발생한 것이다.
+   d. makeConnection 함수는 Peer A와 B 모두가 실행해야한다. 그런데 위와 같은 상황이 발생했다면 Peer B가 makeConnection의 결과로 myPeerConnection이 만들어지지 않는 경우가 발생한 것이다.
+
+   - setRemoteDescription(): 멀리 떨어진 peer의 description을 세팅함을 뜻한다. (내가 아닌 다른 누군가와)
+
+4. iceCandidate
+
+- iceCandidate란? Internet Connectivity Establishment (인터넷 연결 생성)
