@@ -1,11 +1,23 @@
+// import { segment } from "./modules/segment.mjs";
+// import { addTransparency } from "./modules/transparency.mjs";
+// import { addShader } from "./modules/wegbl-transparency.mjs";
+
+// import "./modules/receiver.mjs";
+// import "./modules/stats.mjs";
+
 const videoElement = document.getElementById("input_video");
 const canvasElement = document.getElementById("output_canvas");
 console.log(canvasElement);
 const canvasCtx = canvasElement.getContext("2d");
 
+const webglCanvas = document.querySelector("canvas#transparent_green_webgl");
+
 function onResults(results) {
+  // Save the context's blank state
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+
+  // Draw the raw frame
   canvasCtx.drawImage(
     results.segmentationMask,
     0,
@@ -29,6 +41,7 @@ function onResults(results) {
     canvasElement.height
   );
 
+  // Restore the context's blank state
   canvasCtx.restore();
 }
 
@@ -48,8 +61,7 @@ const camera = new Camera(videoElement, {
   onFrame: async () => {
     await selfieSegmentation.send({ image: videoElement });
   },
-  width: 1280,
-  height: 720,
+  width: 640,
+  height: 360,
 });
-
 camera.start();
