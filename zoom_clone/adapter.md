@@ -38,11 +38,11 @@
 - 소켓 room은 private room, 만든 room 은 public room 이라고 하자!
 - rooms 를 순회했을 때의 room id가 sids 에서도 존재한다면 이는 private room 인 것
 - 방에 join하고 나서 다시 console.log 한 어댑터의 모습은 이러함!
-<center><img src="https://user-images.githubusercontent.com/48302257/210479046-28a62d9b-c085-4410-b98e-48e8b5693535.png" width="400" height="400"></center>
+<center><img src="https://user-images.githubusercontent.com/48302257/210479046-28a62d9b-c085-4410-b98e-48e8b5693535.png" ></center>
 
 
 ### Enter room을 하게 됐을 때 화면에 public room을 보여주는 기능을 만들자 ! (server.js)
-- get과 key를 이용해서 key가 socketID인지 아닌지를 확인
+- get과 key를 이용해서 key가 socketID인지 아닌지를 확
 	- 값이 있는지 찾을 때는 .get("키")와 같이 사용. 
 	- → 존재하는 키라면 해당하는 값을 리턴하고, 없으면 undefined 리턴
 
