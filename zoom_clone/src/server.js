@@ -11,7 +11,7 @@ app.get("/", (_, res) => res.render("home"));
 app.get("/*", (_, res) => res.redirect("/"));
 
 const httpServer = http.createServer(app);
-const wsServer = SocketIO(httpServer);
+const wsServer = SocketIO(httpServer); // SocketIO 서버
 
 wsServer.on("connection", (socket) => {
   socket.on("join_room", (roomName) => {
