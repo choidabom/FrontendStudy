@@ -9,7 +9,8 @@
   - 이 때 각 브라우저들이 다른 서버에 붙을 수도 있는데 각 서버의 메모리의 어댑터를 사용하게 되면 당연히 서로 같은 방을 공유 할 수 없을 것임.
   - `mongodb`와 `mongodb-adapter` 같은 어댑터를 사용해서 서버간 통신을 할 수 있도록 해결할 수 있다.
 
-![image](https://user-images.githubusercontent.com/48302257/210476410-667fd386-acb5-4aed-b9d2-fa3cbd565491.png)
+<center><img src="https://user-images.githubusercontent.com/48302257/210476410-667fd386-acb5-4aed-b9d2-fa3cbd565491.png" width="400" height="400"></center>
+
 
 현재 서버에서 방 입장했을 때 sockets.adapter: `console.log(wsServer.sockets.adapter)`로 확인 가능하다.
 ```js
@@ -37,7 +38,7 @@
 - 소켓 room은 private room, 만든 room 은 public room 이라고 하자!
 - rooms 를 순회했을 때의 room id가 sids 에서도 존재한다면 이는 private room 인 것
 - 방에 join하고 나서 다시 console.log 한 어댑터의 모습은 이러함!
-![image](https://user-images.githubusercontent.com/48302257/210479046-28a62d9b-c085-4410-b98e-48e8b5693535.png)
+<center><img src="https://user-images.githubusercontent.com/48302257/210479046-28a62d9b-c085-4410-b98e-48e8b5693535.png" width="400" height="400"></center>
 
 
 ### Enter room을 하게 됐을 때 화면에 public room을 보여주는 기능을 만들자 ! (server.js)
