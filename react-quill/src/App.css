@@ -1,0 +1,16 @@
+.App {
+  text-align: center;
+}
+
+.editor-wrapper {
+  display: flex;
+  column-gap: 15px;
+}
+
+.editor {
+  width: 300px;
+}
+
+.editor-quill {
+  height: 200px;
+}
