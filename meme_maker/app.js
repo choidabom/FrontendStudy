@@ -127,7 +127,7 @@ fileInput.addEventListener("change", onFileChange);
 saveBtn.addEventListener("click", onSaveClick);
 ///*
 // Q. What is vanilla Javascript?
-// A. 프레임워크 또는 라이브러리가 적용되지 않은 순수한 자바스크립트를 뜻한다. 
+// A. 프레임워크 또는 라이브러리가 적용되지 않은 순수한 자바스크립트를 뜻한다.
 // React.js / Vue.js / Angular.js / Jquery 등의 프레임워크와 라이브러리가 제공되지 않는 본질적인 javascript !
 
 // */
@@ -151,7 +151,7 @@ saveBtn.addEventListener("click", onSaveClick);
 // const CANVAS_HEIGHT = 800;
 
 // canvas.width = CANVAS_WIDTH;     /* 가로 */
-// canvas.height = CANVAS_HEIGHT;    /* 세로 */ 
+// canvas.height = CANVAS_HEIGHT;    /* 세로 */
 // /* 자바스크립트가 실행될 때, ctx.lineWidth를 input의 기본값(value = 5)으로 초기화해줘야 한다. */
 // ctx.lineWidth = lineWidth.value; /* input의 value를 5로 잡았기 때문에 초기값을 5로 준다는 의미 */
 // ctx.lineCap = "round";
@@ -191,7 +191,7 @@ saveBtn.addEventListener("click", onSaveClick);
 // /* 어떤 color가 클릭되었는지 */
 // /* data-color을 활용해서 어떤 색상이 클릭되었는지를 알아낼 것 */
 // function onColorClick(event){
-//     // 사용자가 색깔을 클릭하면 
+//     // 사용자가 색깔을 클릭하면
 //     const colorValue = event.target.dataset.color;
 //     // 라인의 색깔을 바꾸고
 //     ctx.strokeStyle = colorValue;
@@ -217,7 +217,7 @@ saveBtn.addEventListener("click", onSaveClick);
 //     }
 // }
 
-// function onCanvasClick(){   
+// function onCanvasClick(){
 //     if (isFilling){
 //         ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 //     }
@@ -239,9 +239,9 @@ saveBtn.addEventListener("click", onSaveClick);
 //     const file = event.target.files[0];
 //     /* 브라우저의 메모리에서 그 파일의 URL을 얻어올 것임 */
 //     const url = URL.createObjectURL(file);
-//     /* 
+//     /*
 //     blob:http://127.0.0.1:5500/7c7d8a8b-7784-4fb9-a8db-a4b6e3f18b14
-//     => 브라우저가 자신의 메모리에 있는 파일을 드러내는 방식 
+//     => 브라우저가 자신의 메모리에 있는 파일을 드러내는 방식
 //     */
 //     const image = new Image();
 //     image.src = url;
@@ -253,22 +253,22 @@ saveBtn.addEventListener("click", onSaveClick);
 
 // function onDoubleClick(event){
 //     const text = textInput.value;
-//     // ctx의 이전 상태를 저장하고, 몇 가지 변경 후에 다시 되돌리기 
+//     // ctx의 이전 상태를 저장하고, 몇 가지 변경 후에 다시 되돌리기
 //     if (text !== ""){
 //         ctx.save(); // ctx의 현재 상태, 색상, 스타일 등 모든 것을 저장
 //         ctx.lineWidth = 1;
 //         ctx.font = "48px serif";
-//         ctx.strokeText(text, event.offsetX, event.offsetY);     // offsetX와 offsetY는 마우스가 클릭한 canvas 내부 좌표 
+//         ctx.strokeText(text, event.offsetX, event.offsetY);     // offsetX와 offsetY는 마우스가 클릭한 canvas 내부 좌표
 //         ctx.restore();  // 이전에 저장된 상태로 돌아감
 //     }
 // }
 
 // /* toDataURL => 그린 이미지를 URL로 인코딩 */
-// /* 캔버스에 그린 그림을 url로 변환한 다음에 a 태그를 생성해 가짜 링크를 만든 다음  
+// /* 캔버스에 그린 그림을 url로 변환한 다음에 a 태그를 생성해 가짜 링크를 만든 다음
 // 링크의 href는 그림 URL로 설정해주고 */
 // function onSaveClick(){
 //     const url = canvas.toDataURL();
-//     // 웹사이트로 링크하는 대신 이 이미지 URL로 링크할 것 
+//     // 웹사이트로 링크하는 대신 이 이미지 URL로 링크할 것
 //     const a = document.createElement("a");
 //     a.href = url;
 //     a.download = "myDrawing.png";
@@ -297,7 +297,7 @@ saveBtn.addEventListener("click", onSaveClick);
 // const colors = [
 //     "#16a085",
 //     "#f1c40f",
-//     "#f1c40f", 
+//     "#f1c40f",
 //     "#f1c40f",
 //     "#f39c12"
 // ];
@@ -311,7 +311,6 @@ saveBtn.addEventListener("click", onSaveClick);
 //     ctx.stroke();
 // }
 // canvas.addEventListener("mousemove", onclick);
-
 
 // 1.6 Drawing Project Two
 // ctx.fillRect(210, 200, 15, 100);
@@ -342,7 +341,7 @@ saveBtn.addEventListener("click", onSaveClick);
 
 // 1.4 moveTo and lineTo
 // 브러쉬는 항상 (0, 0) 좌표에서 시작, 브러쉬의 시작점을 옮겨주는 함수 moveTo, 시작점부터 길이를 정하는 함수 lineTo
-// ctx.moveTo(50, 50); 
+// ctx.moveTo(50, 50);
 // ctx.lineTo(150, 50);
 // ctx.lineTo(150, 150);
 // ctx.lineTo(50, 150);
@@ -360,5 +359,3 @@ saveBtn.addEventListener("click", onSaveClick);
 // ctx.rect(450, 450, 100, 100);
 // ctx.fillStyle = "red";
 // ctx.fill();
-
-
