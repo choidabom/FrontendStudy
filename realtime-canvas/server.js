@@ -1,13 +1,32 @@
 const express = require("express");
-const path = require("path");
-const app = express();
-
-app.listen(8080, function () {
-  console.log("listening on 8080");
+const expressApp = express();
+const httpServer = require("http").createServer(expressApp);
+const io = require("socket.io")(httpServer, {
+  cors: { origin: true },
 });
 
-app.use(express.static(path.join(__dirname, "client/build")));
+const port = process.env.PORT || 5000;
 
-app.get("/", function (req, res) {
-  res.sendFile(path.join(__dirname, "client/build/index.html"));
+io.on("connection", (socket) => {
+  console.log("user online");
+
+  socket.on("image-data", (data) => {
+    socket.broadcast.emit("image-data", data);
+  });
+  socket.on("clear", (data) => {
+    io.emit("clear", data);
+  });
+  socket.on("setBrush", (data) => {
+    socket.broadcast.emit("setBrush", data);
+  });
+  socket.on("undoCanvas", (data) => {
+    socket.broadcast.emit("undoCanvas", data);
+  });
+  socket.on("undo-photo", ({ photoData }) => {
+    socket.broadcast.emit("undo-data", { undoData: photoData });
+  });
+});
+
+httpServer.listen(port, () => {
+  console.log("Server running at", port);
 });
