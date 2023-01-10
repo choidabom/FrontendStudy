@@ -80,6 +80,9 @@ const Canvas = () => {
         <div>
           <MenuBar getCtx={getCtx} getCanvas={getCanvas} />
         </div>
+        <div>
+          <Button></Button>
+        </div>
       </div>
     </CanvasStyle>
   );
