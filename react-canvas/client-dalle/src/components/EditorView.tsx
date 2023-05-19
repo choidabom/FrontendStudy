@@ -1,3 +1,4 @@
+import React from "react";
 import CanvasView from "./CanvasView";
 import PromptView from "./PromptView";
 
