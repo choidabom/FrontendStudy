@@ -1,4 +1,8 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
+import { Input } from "@mui/material";
+import { fetchGeneration } from "../fetchGeneration";
+import { fetchVariation } from "../fetchVariation";
+import { CanvasButton, CanvasContainer } from "./CanvasView.style";
 
 interface Coordinate {
     x: number;
@@ -10,11 +14,7 @@ interface CanvasProps {
     height?: number; // 캔버스의 높이를 나타내는 속성
 }
 
-const Canvas: React.FC<CanvasProps> = ({
-    width = 500,
-    height = 500,
-}) => {
-
+const Canvas: React.FC<CanvasProps> = ({ width = 550, height = 550, }) => {
     // React에서는 useRef를 통해서 canvas에 접근해야한다.
     const canvasRef = useRef<HTMLCanvasElement>(null); // canvas element에 대한 참조를 저장하기 위한 useRef Hook 사용
     const fileInputRef = useRef(null);
@@ -22,6 +22,29 @@ const Canvas: React.FC<CanvasProps> = ({
     const [mousePosition, setMousePosition] = useState<Coordinate | undefined>(undefined); // 마우스 위치를 저장하기 위한 상태 값
     const [imageData, setImageData] = useState<ImageData | null>(null);
     const [isErasing, setIsErasing] = useState<boolean>(false);
+    const [inputPrompt, setInputPrompt] = useState<string>("");
+
+    const handleInputPrompt = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const prompt = event.target.value;
+        setInputPrompt(prompt);
+    };
+
+    // 입력값에 따른 여러 요청 (Generation/Edits/Variation)
+    const handleRequest = async () => {
+        if (inputPrompt === "" || imageData === null) {
+            alert("prompt를 입력해주세요.");
+            return;
+        } else {
+            if (!imageData) {
+                fetchGeneration(inputPrompt);
+            } else if (!inputPrompt) {
+                fetchVariation(imageData);
+            } else {
+                // Handle edits
+            }
+        }
+    };
+
 
     const getCoordinates = useCallback((event: MouseEvent): Coordinate | undefined => {
         if (!canvasRef.current) return; // canvas element가 없으면 반환
@@ -31,6 +54,7 @@ const Canvas: React.FC<CanvasProps> = ({
             y: event.pageY - canvas.offsetTop   // 마우스의 페이지 Y 좌표에서 캔버스의 offsetTop 값을 빼서 상대적인 Y 좌표 계산
         };
     }, []);
+
 
     const startPaint = useCallback((event: MouseEvent) => {
         const coordinates = getCoordinates(event);  // 마우스 이벤트에서 좌표를 가져옴
@@ -122,12 +146,13 @@ const Canvas: React.FC<CanvasProps> = ({
         context.lineTo(mousePosition.x, mousePosition.y);
         context.stroke();
 
-
         // 현재 캔버스 이미지 데이터를 업데이트하고, 캔버스에 이미지를 그립니다.
         setImageData(context.getImageData(0, 0, canvas.width, canvas.height));
         context.putImageData(imageData, 0, 0);
     }, [isPainting, mousePosition, imageData, getCoordinates]);
 
+
+    // img 삭제
     const handleClear = useCallback(() => {
         if (canvasRef.current) {
             const canvas = canvasRef.current;
@@ -140,6 +165,17 @@ const Canvas: React.FC<CanvasProps> = ({
     }, []);
 
 
+    // img 지우개
+    const handleErase = useCallback(() => {
+        if (canvasRef.current && imageData) {
+            const canvas = canvasRef.current;
+            const context = canvas.getContext("2d");
+
+        }
+    }, [imageData]);
+
+
+    // img 다운로드
     const handelDownload = useCallback(() => {
         if (canvasRef.current) {
             const canvas = canvasRef.current;
@@ -204,24 +240,38 @@ const Canvas: React.FC<CanvasProps> = ({
     }, [exitPaint]);
 
 
+    // Prompt 작성 input
+    const insertPrompt = () => {
+        return <Input
+            value={inputPrompt}
+            onChange={handleInputPrompt}
+        />;
+    };
+
+    // Generation, Edits, Variation 버튼
+    const generateButton = () => {
+        return <CanvasButton
+            onClick={() => handleRequest()} type="submit">
+            {!imageData ? "Generate" : !inputPrompt ? "Variation" : "Edits"}
+        </CanvasButton>;
+    };
+
     return (
-        <>
+        <CanvasContainer>
+            <div>
+                {insertPrompt()}
+                {generateButton()}
+            </div>
             <div>
                 <div>
-                    <canvas ref={canvasRef} width={width} height={height} style={{ border: "1px solid red" }} />
+                    <canvas ref={canvasRef} width={width} height={height} style={{ border: "1px solid gray" }} />
                 </div>
-                <input
-                    type="file"
-                    accept="image/png"
-                    onChange={handleUpload}
-                    ref={fileInputRef} />
-                {/* <button onClick={() => setIsErasing(!isErasing)}>
-                    {isErasing ? "그리기 모드" : "지우개 모드"}
-                </button> */}
-                <button onClick={handleClear}>Clear</button>
-                <button onClick={handelDownload}>Download</button>
+                <input type="file" accept="image/png" onChange={handleUpload} ref={fileInputRef} />
+                <CanvasButton onClick={handleClear}>Clear</CanvasButton>
+                <CanvasButton onClick={handleErase}>Erase</CanvasButton>
+                <CanvasButton onClick={handelDownload}>Download</CanvasButton>
             </div >
-        </>
+        </CanvasContainer>
     );
 };
 
