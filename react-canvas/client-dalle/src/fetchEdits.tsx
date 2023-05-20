@@ -1,6 +1,6 @@
 import { API_URL } from "./Config";
 
-const fetchEdits = async (prompt: string) => {
+const fetchEdits = async (prompt: string, originImageData: ImageData, imageData: ImageData) => {
     try {
         const url = `${API_URL}/edits`;
         let requestOptions: RequestInit = {
@@ -9,7 +9,10 @@ const fetchEdits = async (prompt: string) => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                prompt: prompt
+                prompt: prompt,
+                fromOutput: 5,
+                upload: originImageData,
+                mask: imageData
             })
         };
         const response = await fetch(url, requestOptions);

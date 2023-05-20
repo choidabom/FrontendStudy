@@ -1,6 +1,9 @@
 import { API_URL } from "./Config";
+import { imageDataToURL } from "./imageDataToURL";
 
 const fetchVariation = async (imageData: ImageData) => {
+    const imageURL = imageDataToURL(imageData);
+    console.log(imageURL);
     try {
         const url = `${API_URL}/variation`;
         let requestOptions: RequestInit = {
@@ -9,7 +12,10 @@ const fetchVariation = async (imageData: ImageData) => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                imageData: imageData // 수정 필요
+                prompt: null,
+                fromOutput: 5,
+                upload: imageURL,
+                mask: null
             })
         };
         const response = await fetch(url, requestOptions);
