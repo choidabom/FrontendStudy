@@ -11,6 +11,5 @@
 - [nodeJSwithReact](https://github.com/choidabom/FrontendStudy/tree/main/nodeJSwithReact): nodeJS+Express 서버와 React 연동
 - [webRTC](https://github.com/choidabom/FrontendStudy/blob/main/webRTC.md): webRTC가 뭘까?
 - [playground](https://github.com/choidabom/FrontendStudy/tree/main/playground): How to add virtual background transparency in WebRTC
-- [react_for_beginners](https://github.com/choidabom/FrontendStudy/tree/main/react_for_beginners): ReactJS로 영화 웹 서비스 만들기 from nomadcoders
-- [selfie_segmentation](https://github.com/choidabom/FrontendStudy/tree/main/selfie_segmentation): sefile segmentation JavaScript API from mediaPipe
-- [zoom_clone](https://github.com/choidabom/FrontendStudy/tree/main/zoom_clone): zoom clone project from nomadcoders
+- [selfie_segmentation](https://github.com/choidabom/FrontendStudy/tree/main/selfie-segmentation): sefile segmentation JavaScript API from mediaPipe
+- [zoom_clone](https://github.com/choidabom/FrontendStudy/tree/main/zoom-clone): zoom clone project from nomadcoders
