@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import ParentComponent from './components/230509-propsExample/ParentComponent';
 import Lobby from './components/230510-typescriptZustandPractice/Lobby';
 import InputID from './components/230510-typescriptZustandPractice/InputID';
-
+import InputSample from './components/230609-useRef/InputSample';
 function App() {
     const [count, setCount] = useState(0);
 
@@ -15,8 +15,9 @@ function App() {
                 {/*  Routes 밖은 바뀌지 않을 컴포넌트 */}
                 <Routes>
                     {/* 페이지 변환시 바뀔 컴포넌트 작성, path 속성은 경로, element 속성은 컴포넌트 작성 */}
-                    <Route path='/' element={<InputID />} />
-                    <Route path='/lobby' element={<Lobby />} />
+                    {/* <Route path='/' element={<InputID />} />
+                    <Route path='/lobby' element={<Lobby />} /> */}
+                    <Route path='/' element={<InputSample />} />
                 </Routes>
             </BrowserRouter>
         </div>
