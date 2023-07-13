@@ -6,6 +6,7 @@ import Lobby from './components/230510-typescriptZustandPractice/Lobby';
 import InputID from './components/230510-typescriptZustandPractice/InputID';
 import InputSample from './components/230609-useRef/InputSample';
 import HoverPractice from './components/230630-CSSPractice/HoverPractice';
+import ScrollPractice from './components/230713-useRefDOMScroll/ScrollPractice';
 
 function App() {
     const [count, setCount] = useState(0);
@@ -24,7 +25,8 @@ function App() {
         //     </BrowserRouter>
         // </div>
 
-        <HoverPractice />
+        // <HoverPractice />
+        <ScrollPractice />
     );
 }
 
