@@ -7,6 +7,7 @@ import InputID from './components/230510-typescriptZustandPractice/InputID';
 import InputSample from './components/230609-useRef/InputSample';
 import HoverPractice from './components/230630-CSSPractice/HoverPractice';
 import ScrollPractice from './components/230713-useRefDOMScroll/ScrollPractice';
+import UseRefPracticeComponent from './components/230717-useRefAnduseState/UseRefPracticeComponent';
 
 function App() {
     const [count, setCount] = useState(0);
@@ -27,6 +28,7 @@ function App() {
 
         // <HoverPractice />
         <ScrollPractice />
+        // <UseRefPracticeComponent />
     );
 }
 
